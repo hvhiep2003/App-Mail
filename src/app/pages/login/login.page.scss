@@ -1,0 +1,58 @@
+.page-bg {
+    --background: #fff;
+}
+
+.login-container {
+    padding: 40px 24px;
+    max-width: 420px;
+    margin: auto;
+}
+
+.title {
+    text-align: center;
+    font-size: 40px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1a2332;
+}
+
+.subtitle {
+    text-align: center;
+    color: #8a94a6;
+    margin-bottom: 32px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2c3645;
+}
+
+.input-item {
+    --background: #f5f7fa;
+    --border-radius: 14px;
+    --padding-start: 14px;
+}
+
+.options-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 16px 0 26px;
+    font-size: 14px;
+    color: #444;
+}
+
+.btn-login {
+    --background: #2468ff;
+    --border-radius: 14px;
+    height: 50px;
+    font-size: 18px;
+    font-weight: 700;
+    box-shadow: 0 12px 24px rgba(34, 82, 255, 0.25);
+}

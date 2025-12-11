@@ -1,0 +1,80 @@
+.input-group {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-label {
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #555;
+    font-size: 16px;
+    padding-left: 10px;
+}
+
+.input-field {
+    width: 100%;
+    border: 1px solid #ccc;
+    /* khung xung quanh */
+    border-radius: 12px;
+    // padding: 10px 12px;
+    /* padding trên/dưới và trái/phải */
+    background-color: #fff;
+    --padding-start: 12px;
+    /* quan trọng: để nội dung không sát trái */
+}
+
+
+.input-item {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    // padding-left: 10px;
+}
+
+
+/* Nút hành động */
+.action-btn {
+    margin-top: 12px;
+    border-radius: 24px;
+    height: 48px;
+}
+
+/* Khung bao quanh cả nhóm toggle */
+.toggle-group {
+    border: 1px solid #ccc;
+    /* khung ngoài */
+    border-radius: 12px;
+    background: #fff;
+    overflow: hidden;
+    /* bo tròn các góc */
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Mỗi toggle */
+.toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+}
+
+/* Divider: tạo đường gạch phân cách */
+.toggle-row.divider {
+    border-top: 1px solid #ccc;
+}
+
+/* Label trong toggle */
+.toggle-label {
+    font-weight: 500;
+    color: #555;
+}
+
+/* Nút lưu ở footer */
+.save-btn {
+    border-radius: 24px;
+    height: 48px;
+    font-size: 18px;
+    font-weight: 600;
+}

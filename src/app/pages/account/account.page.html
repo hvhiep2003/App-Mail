@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="header-bar">
+      <div class="title">Admin</div>
+      <ion-icon name="log-out-outline" class="logout-icon" (click)="goBack()"></ion-icon>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="page-title">
+    Tất cả các tài khoản
+  </div>
+
+  <!-- SEARCH BAR -->
+  <ion-searchbar placeholder="Tìm kiếm theo email..." show-clear-button="always"></ion-searchbar>
+
+  <!-- ACCOUNT LIST -->
+  <div class="account-list">
+    <ion-card class="account-card" *ngFor="let user of users" [routerLink]="'/account-info/' + user.userId">
+      <ion-card-content class="account-item">
+        <div class="info">
+          <div class="email">{{ user.emailAddress }}</div>
+          <span class="status" [ngClass]="{
+            active: user.status === 'active',
+            inactive: user.status === 'inactive',
+            locked: user.status === 'locked'
+          }">
+            {{ user.status === 'active' ? 'Đang hoạt động' : (user.status === 'locked' ? 'Đang khóa' : 'Chưa hoạt động')
+            }}
+          </span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <!-- FLOATING BUTTON -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button routerLink="/add-user">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+
+</ion-content>

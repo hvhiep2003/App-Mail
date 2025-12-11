@@ -1,0 +1,7 @@
+{
+  "name": "MailApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

@@ -1,0 +1,126 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>THÙNG RÁC</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button 
+        *ngIf="isEditMode" 
+        (click)="selectAllMails()" 
+        color="primary"
+        class="not-bold-button"
+      >
+        {{ selectedMails.size === filteredMails.length && filteredMails.length > 0 ? 'Bỏ chọn' : 'Chọn tất cả' }}
+      </ion-button>
+      
+      <ion-button (click)="toggleEditMode()" color="primary">
+        {{ isEditMode ? 'Xong' : 'Sửa' }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="inbox-content">
+  <div class="search-container">
+    <ion-searchbar 
+      placeholder="Tìm kiếm"
+      [(ngModel)]="searchQuery"
+      (ionInput)="onSearch($event)"
+      showCancelButton="never"
+      class="custom-searchbar"
+      mode="ios" ></ion-searchbar>
+  </div>
+
+  <div class="mail-list-container">
+    <div *ngIf="filteredMails.length === 0" class="empty-state">
+      <ion-text>
+        <p class="empty-message">Thùng rác trống</p>
+      </ion-text>
+    </div>
+
+    <div *ngFor="let mail of filteredMails" 
+         class="mail-item" 
+         [class.selected-item]="selectedMails.has(mail.id)"  
+         (click)="!isEditMode && selectMail(mail)">
+      
+      <div class="selection-area" [class.edit-mode-active]="isEditMode" (click)="$event.stopPropagation()">
+        <ion-checkbox 
+          [checked]="isSelected(mail.id)"
+          (ionChange)="toggleSelectMail(mail.id)"
+          shape="circle" 
+          mode="md"
+          color="primary"
+          class="selection-checkbox"
+        ></ion-checkbox>
+      </div>
+      
+      <div class="mail-visual-container" *ngIf="!isEditMode">
+        <div class="unread-dot" *ngIf="!mail.isRead"></div>
+        <div class="mail-avatar">
+          {{ getAvatarText(mail.sender) }}
+        </div>
+      </div>
+
+      <div class="mail-item-content">
+        <div class="mail-item-header">
+          <h3 class="mail-sender" [class.unread-text]="!mail.isRead">{{ mail.sender }}</h3> 
+          
+          <div class="mail-time-status">
+             <span class="status-badge" *ngIf="!mail.isRead">Thư mới</span>
+             <span class="mail-time">{{ getRelativeTime(mail.date) }}</span> 
+          </div>
+        </div>
+        
+        <p class="mail-subject" [class.unread-text]="!mail.isRead">{{ mail.subject | slice:0:60 }}...</p>
+        <p class="mail-preview">{{ mail.body | slice:0:60 }}...</p>
+      </div>
+      
+      <div class="mail-item-flag" *ngIf="mail.isFlagged">
+        <ion-icon name="star" color="warning"></ion-icon>
+      </div>
+      
+    </div>
+  </div>
+
+  </ion-content>
+
+<ion-footer *ngIf="isEditMode" class="edit-toolbar">
+  <ion-toolbar>
+    <ion-grid class="ion-no-padding">
+      <ion-row class="ion-align-items-center">
+        <ion-col size="auto" class="ion-no-padding">
+          <ion-button 
+            expand="full" 
+            shape="round" 
+            [fill]="selectedMails.size > 0 ? 'solid' : 'clear'"  
+            [color]="selectedMails.size > 0 ? 'primary' : 'medium'"  
+            (click)="markMails($event)" 
+            [disabled]="selectedMails.size === 0" 
+            class="footer-edit-button" 
+          >
+            Đánh dấu
+          </ion-button>
+        </ion-col>
+        
+        <ion-col size class="ion-no-padding"></ion-col> <ion-col size="auto" class="ion-no-padding">
+          <ion-button 
+            expand="full" 
+            shape="round" 
+            [fill]="selectedMails.size > 0 ? 'solid' : 'clear'"  
+            [color]="selectedMails.size > 0 ? 'primary' : 'medium'"  
+            (click)="moveMails($event)" 
+            [disabled]="selectedMails.size === 0" 
+            class="footer-edit-button" 
+          >
+            Di chuyển
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

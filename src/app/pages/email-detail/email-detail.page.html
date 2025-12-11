@@ -1,0 +1,94 @@
+<ion-header translucent>
+  <ion-toolbar class="light-header">
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="closePage()">
+        <ion-icon name="close" style="font-size:25px;color:black"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="email" class="email-detail">
+
+  <div class="header-card">
+    <div class="avatar">{{ fromInitials }}</div>
+
+
+    <div class="info">
+      <div class="sender">{{ email.sender }}</div>
+      <div class="to">
+        {{ folder === 'inbox' ? 'Từ' : 'Đến' }}: <strong>{{ to }}</strong>
+      </div>
+
+    </div>
+
+    <div class="date">{{ email.date | date:'dd/MM/yyyy' }}</div>
+
+  </div>
+
+  <div class="content-card">
+    <h2 class="subject">{{ email.subject }}</h2>
+    <p class="body">{{ email.body }}</p>
+  </div>
+
+</ion-content>
+
+<div class="footer-bar">
+  <ion-button fill="clear" class="reply-btn" (click)="openActions()">
+    <ion-icon slot="icon-only" name="arrow-undo" style="font-size:25px"></ion-icon>
+  </ion-button>
+
+  <ion-button fill="clear" class="compose-footer-btn">
+    <ion-icon name="create"></ion-icon>
+  </ion-button>
+</div>
+
+
+<!-- Bottom Sheet Modal -->
+<ion-modal [isOpen]="isActionOpen" (didDismiss)="closeActions()" cssClass="action-sheet-modal">
+  <ng-template>
+    <div class="sheet-wrapper">
+
+      <!-- Nút X -->
+      <div class="sheet-header">
+        <ion-icon name="close" (click)="closeActions()"></ion-icon>
+      </div>
+
+      <div class="actions-grid">
+
+        <div class="action-item" (click)="reply()">
+          <ion-icon name="arrow-undo"></ion-icon>
+          <span>Trả lời</span>
+        </div>
+
+
+        <div class="action-item" (click)="replyAll()">
+          <ion-icon name="return-up-back"></ion-icon>
+          <span>Trả lời tất cả</span>
+        </div>
+
+        <div class="action-item" (click)="forward()">
+          <ion-icon name="arrow-redo"></ion-icon>
+          <span>Chuyển tiếp</span>
+        </div>
+
+        <div class="action-item" (click)="markUnread()">
+          <ion-icon name="mail-unread"></ion-icon>
+          <span>Chưa đọc</span>
+        </div>
+
+        <div class="action-item" (click)="delete()">
+          <ion-icon name="trash"></ion-icon>
+          <span>Xóa thư</span>
+        </div>
+
+        <div class="action-item" (click)="moveToTrash()">
+          <ion-icon name="folder"></ion-icon>
+          <span>Thùng rác</span>
+        </div>
+
+      </div>
+
+    </div>
+  </ng-template>
+</ion-modal>

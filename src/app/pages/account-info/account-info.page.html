@@ -1,0 +1,88 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>THÔNG TIN TÀI KHOẢN</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="close-outline" style="font-size:30px;color:black"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Tên người dùng -->
+  <div class="input-group">
+    <label class="input-label">Tên người dùng</label>
+    <ion-input #nameInput [(ngModel)]="user.name" class="input-field"></ion-input>
+  </div>
+
+  <!-- Email -->
+  <div class="input-group">
+    <label class="input-label">Địa chỉ email</label>
+    <ion-input type="email" [(ngModel)]="user.email" class="input-field"></ion-input>
+  </div>
+
+  <!-- Password -->
+  <!-- <div class="input-group">
+    <label class="input-label">Mật khẩu</label>
+    <ion-input type="password" [(ngModel)]="user.password" class="input-field"></ion-input>
+  </div> -->
+
+  <div class="input-group">
+    <label class="input-label">Mật khẩu</label>
+    <ion-item lines="none" class="input-item">
+      <ion-input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="user.password" placeholder="Nhập mật khẩu">
+      </ion-input>
+      <ion-icon slot="end" [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" (click)="togglePassword()"
+        style="cursor: pointer;">
+      </ion-icon>
+    </ion-item>
+  </div>
+
+  <!-- Nút hành động -->
+  <ion-button expand="block" class="action-btn" (click)="edit()">
+    <ion-icon slot="start" name="create-outline"></ion-icon>
+    Sửa thông tin
+  </ion-button>
+
+  <ion-button expand="block" color="danger" class="action-btn" (click)="delete()">
+    <ion-icon slot="start" name="trash-outline"></ion-icon>
+    Xóa tài khoản
+  </ion-button>
+
+  <ion-button expand="block" class="action-btn" (click)="lockAccount()">
+    <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+    Khóa tài khoản
+  </ion-button>
+
+  <!-- Toggle -->
+  <div class="toggle-group">
+
+    <div class="toggle-row">
+      <span class="toggle-label">Trạng thái</span>
+      <ion-toggle [(ngModel)]="user.active"></ion-toggle>
+    </div>
+
+    <!-- <div class="toggle-row divider">
+      <span class="toggle-label" (click)="unlockAccount()">Mở khóa</span>
+      <ion-toggle [(ngModel)]="user.unlock"></ion-toggle>
+    </div> -->
+
+    <ion-button expand="block" class="action-btn" (click)="unlockAccount()">
+      <ion-icon slot="start" name="lock-open-outline"></ion-icon>
+      Mở khóa tài khoản
+    </ion-button>
+
+  </div>
+</ion-content>
+
+<!-- Footer Lưu -->
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" class="save-btn" (click)="save()">
+      <ion-icon name="save-outline" slot="start"></ion-icon>
+      Lưu
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

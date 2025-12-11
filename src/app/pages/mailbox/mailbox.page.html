@@ -1,0 +1,303 @@
+<ion-app>
+
+  <!-- MENU -->
+  <ion-menu contentId="main-content" side="start">
+    <ion-header>
+      <ion-toolbar color="light" class="menu-header">
+
+        <!-- BÊN TRÁI -->
+        <div class="left-title" slot="start">DANH MỤC</div>
+
+        <!-- BÊN PHẢI: ADMIN + BELL -->
+        <div class="right-admin" slot="end">
+          <span class="admin-name">Admin</span>
+          <ion-icon name="notifications-outline" class="bell"></ion-icon>
+        </div>
+
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="menu-content">
+
+      <!-- SOẠN + TÌM KIẾM TRÊN 1 DÒNG -->
+      <div class="menu-actions-row">
+
+        <div class="action-box">
+          <div class="action-box compose-box" routerLink="/compose">
+            <ion-icon name="create-outline"></ion-icon>
+            <span>Soạn</span>
+          </div>
+
+          <div class="action-box search-box">
+            <ion-icon name="search-outline"></ion-icon>
+            <input type="text" placeholder="Tìm" />
+          </div>
+        </div>
+
+        <ion-list class="menu-list">
+
+          <ion-item routerLink="/all-mail" class="menu-item" detail="false">
+            <ion-icon name="mail-unread-outline" slot="start"></ion-icon>
+            Tất cả thư
+          </ion-item>
+
+          <!-- Folder động -->
+          <ng-container *ngFor="let folder of folders">
+            <ion-item class="menu-item" [routerLink]="folder.link" detail="false">
+              <!-- Chevron toggle -->
+              <ion-icon *ngIf="folder.children.length"
+                [name]="folder.expanded ? 'chevron-down-outline' : 'chevron-forward-outline'" slot="start"
+                (click)="toggleFolder(folder); $event.stopPropagation()">
+              </ion-icon>
+
+              <!-- Folder icon -->
+              <ion-icon [name]="folder.icon" slot="start"></ion-icon>
+
+              <!-- Folder name -->
+              <span>{{ getFolderNameVN(folder.name) }}</span>
+            </ion-item>
+
+            <!-- Child folders -->
+            <div *ngIf="folder.expanded && folder.children.length" class="child-folders">
+              <ng-container *ngFor="let child of folder.children">
+                <ion-item class="menu-item child-item" [routerLink]="child.link" detail="false">
+                  <ion-icon name="chevron-forward-outline" slot="start"></ion-icon>
+                  <ion-icon name="folder-outline" slot="start"></ion-icon>
+                  <span>{{ child.name }}</span>
+                </ion-item>
+              </ng-container>
+            </div>
+          </ng-container>
+
+
+          <ion-item routerLink="/star-mail" class="menu-item" detail="false">
+            <ion-icon name="star-outline" slot="start"></ion-icon>
+            Thư đánh dấu
+          </ion-item>
+
+          <ion-item *ngIf="isAdmin" routerLink="/account" class="menu-item" detail="false">
+            <ion-icon name="settings-outline" slot="start"></ion-icon>
+            Quản lí
+          </ion-item>
+
+          <ion-item routerLink="/scheduled-mail" class="menu-item" detail="false">
+
+            <ion-icon name="time-outline" slot="start"></ion-icon>
+            Đã lên lịch
+          </ion-item>
+
+          <!-- <ng-container *ngFor="let folder of folders">
+            <ion-item class="menu-item">
+              <ion-icon name="{{ folder.expanded ? 'chevron-down-outline' : 'chevron-forward-outline' }}" slot="start"
+                (click)="toggleFolder(folder); $event.stopPropagation()"></ion-icon>
+              <ion-icon name="folder-outline" slot="start"></ion-icon>
+
+              <ion-input *ngIf="folder.isEditing" [(ngModel)]="folder.name" (ionBlur)="finishRename(folder)"
+                (keyup.enter)="finishRename(folder)" style="flex:1">
+              </ion-input>
+
+              <span *ngIf="!folder.isEditing">{{ folder.name }}</span>
+
+              <ion-icon name="ellipsis-vertical-outline" slot="end" (click)="openPopover($event, folder)"></ion-icon>
+            </ion-item>
+
+            <div *ngIf="folder.expanded && folder.children.length" class="child-folders">
+              <ng-container *ngFor="let child of folder.children">
+                <ion-item class="menu-item child-item">
+                  <ion-icon name="chevron-forward-outline" slot="start"></ion-icon>
+                  <ion-icon name="folder-outline" slot="start"></ion-icon>
+
+                  <ion-input *ngIf="child.isEditing" [(ngModel)]="child.name" (ionBlur)="finishRename(child)"
+                    (keyup.enter)="finishRename(child)" style="flex:1">
+                  </ion-input>
+
+                  <span *ngIf="!child.isEditing">{{ child.name }}</span>
+
+                  <ion-icon name="ellipsis-vertical-outline" slot="end" (click)="openPopover($event, child)"></ion-icon>
+                </ion-item>
+              </ng-container>
+            </div>
+          </ng-container> -->
+
+
+          <!-- Nút thêm thư mục -->
+          <ion-item class="menu-item" (click)="openCreateFolder()">
+            <ion-icon name="add-outline" slot="start"></ion-icon>
+            Thêm thư mục
+          </ion-item>
+
+          <!-- Modal tạo thư mục -->
+          <ion-modal [isOpen]="isCreateFolderOpen" (didDismiss)="closeCreateFolder()" class="center-modal">
+            <ng-template>
+              <ion-content class="ion-padding modal-wrapper">
+
+                <div class="modal-box">
+
+                  <!-- Header -->
+                  <div class="modal-header">
+                    <div class="title">TẠO THƯ MỤC MỚI</div>
+                    <ion-icon name="close-outline" class="close-btn" (click)="closeCreateFolder()"></ion-icon>
+                  </div>
+
+                  <!-- Nhập tên thư mục -->
+                  <div class="field-block">
+                    <label class="field-label">Tên thư mục</label>
+                    <div class="input-box">
+                      <ion-input placeholder="Nhập tên thư mục" [(ngModel)]="folderName"></ion-input>
+                    </div>
+                  </div>
+
+                  <!-- Toggle tạo thư mục con -->
+                  <div class="field-block toggle-block">
+                    <label class="field-label">Đặt thư mục này dưới thư mục khác</label>
+                    <small class="field-desc">Tạo một thư mục con</small>
+                    <ion-toggle [(ngModel)]="isChild"></ion-toggle>
+                  </div>
+
+                  <div class="field-block" *ngIf="isChild">
+                    <label class="field-label">Chọn thư mục gốc</label>
+                    <div class="select-box">
+                      <ion-select interface="popover" [(ngModel)]="parentId" placeholder="Chọn thư mục gốc">
+                        <ion-select-option *ngFor="let f of folders" [value]="f.id">
+                          {{ f.name }}
+                        </ion-select-option>
+                      </ion-select>
+                    </div>
+                  </div>
+
+                  <!-- Buttons -->
+                  <div class="button-row">
+                    <ion-button fill="outline" (click)="closeCreateFolder()">Hủy</ion-button>
+                    <ion-button class="confirm" (click)="createFolder()">Tạo thư mục</ion-button>
+                  </div>
+                </div>
+
+              </ion-content>
+            </ng-template>
+          </ion-modal>
+        </ion-list>
+
+        <!-- Popover -->
+        <ion-popover [isOpen]="isOpen" [event]="popoverEvent" (didDismiss)="isOpen = false">
+          <ng-template>
+            <ion-list lines="none">
+
+              <!-- Dòng bình thường, tắt mũi tên mặc định -->
+              <ion-item button detail="false" (click)="renameFolder(); $event.stopPropagation()">
+                Đổi tên
+              </ion-item>
+
+              <!-- Dòng có mũi tên: tắt detail mặc định, thêm icon thủ công -->
+              <ion-item button detail="false" (click)="openMovePopover($event)">
+                Di chuyển
+                <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+              </ion-item>
+
+              <!-- Dòng bình thường, tắt mũi tên mặc định -->
+              <ion-item button detail="false" (click)="deleteFolder()">
+                Xóa
+              </ion-item>
+
+            </ion-list>
+          </ng-template>
+        </ion-popover>
+
+        <!-- Popover Di chuyển -->
+        <ion-popover [isOpen]="isMovePopoverOpen" [event]="movePopoverEvent" (didDismiss)="isMovePopoverOpen=false">
+          <ng-template>
+            <ion-list lines="none">
+              <ion-item *ngFor="let f of foldersList" button (click)="selectMoveFolder(f)">
+                <ion-icon [name]="f.icon" slot="start"></ion-icon>
+                {{ f.name }}
+              </ion-item>
+            </ion-list>
+          </ng-template>
+        </ion-popover>
+
+        <div class="logout-container">
+          <ion-item class="menu-item logout-item" detail="false" (click)="logout()">
+            <ion-icon name="log-out-outline" slot="start"></ion-icon>
+            Đăng xuất
+          </ion-item>
+        </div>
+      </div>
+    </ion-content>
+  </ion-menu>
+
+  <!-- MAIN -->
+  <div id="main-content" class="page-wrapper">
+
+    <!-- HEADER -->
+    <ion-header class="app-header" translucent>
+      <ion-toolbar class="toolbar-custom">
+        <!-- Menu button -->
+        <ion-buttons slot="start">
+          <ion-menu-button class="menu-btn" style="font-size:30px;color:black"></ion-menu-button>
+        </ion-buttons>
+
+        <!-- Container search + admin -->
+        <div class="search-admin-container">
+          <ion-searchbar class="search-custom" placeholder="Tìm kiếm trong thư" [(ngModel)]="searchQuery"
+            (ionInput)="onSearch()">
+          </ion-searchbar>
+
+
+          <div class="header-name">Admin</div>
+        </div>
+      </ion-toolbar>
+    </ion-header>
+
+
+    <!-- CONTENT -->
+    <!-- <ion-content fullscreen class="content-area">
+      <div class="section-title">Chính</div>
+      <div class="mail-item" [routerLink]="['/email-detail']">
+        <div class="av-circle">A</div>
+        <div class="mail-info">
+          <div class="mail-title">HoangHiep@</div>
+          <div class="mail-title">Tiêu đề email</div>
+          <div class="mail-subtitle">Nội dung tóm tắt...</div>
+        </div>
+        <div class="date">12:30</div>
+      </div>
+    </ion-content> -->
+    <div class="section-title">Chính</div>
+    <!-- <div class="mail-item" *ngFor="let mail of emails" (click)="openMail(mail)"> -->
+    <div class="mail-item" *ngFor="let mail of filteredEmails" (click)="openMail(mail)">
+
+      <div class="av-circle">
+        {{ getSenderLetter(mail) }}
+      </div>
+
+      <div class="mail-info">
+        <div class="mail-title sender">
+          {{ getSenderEmail(mail) }}
+        </div>
+        <div class="mail-title subject">
+          {{ mail.subject }}
+        </div>
+        <div class="mail-subtitle">
+          {{ mail.body | slice:0:45 }}{{ mail.body.length > 45 ? '...' : '' }}
+        </div>
+      </div>
+
+      <div class="date">
+        {{ mail.createdAt | date:'shortTime' }}
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <ion-footer>
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button fill="clear" routerLink="/compose">
+            <ion-icon name="create-outline" style="font-size:30px;color:black"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+
+      </ion-toolbar>
+    </ion-footer>
+
+  </div>
+
+</ion-app>

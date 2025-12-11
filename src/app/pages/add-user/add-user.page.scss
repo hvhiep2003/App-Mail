@@ -1,0 +1,97 @@
+:host {
+    --ion-safe-area-top: 12px;
+}
+
+.toolbar-custom {
+    --background: #fff;
+    --ion-color-base: #000;
+    border-bottom: 1px solid #eee;
+}
+
+.add-user-content {
+    padding: 20px 24px;
+    background: #fff;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Container input */
+.input-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #c9c9c9;
+    border-radius: 10px;
+    margin: 0 25px;
+    /* margin trái/phải */
+    background: #fafafa;
+    height: 60px;
+    // padding: 0;
+}
+
+.input-box ion-input {
+    flex: 1;
+    --padding-start: 14px;
+    --padding-end: 14px;
+    --background: transparent;
+    height: 100%;
+}
+
+.input-with-btn ion-button {
+    height: 100%;
+    /* cao bằng input */
+    min-width: 40px;
+    margin-right: 6px;
+    // padding: 0;
+}
+
+/* label */
+label {
+    display: block;
+    font-weight: 600;
+    color: #444;
+    margin: 25px 0 10px 25px;
+    font-size: 15px;
+}
+
+/* gợi ý mật khẩu */
+.password-hint {
+    margin: 10px 0 8px 25px;
+    font-size: 12px;
+    color: #8c8c8c;
+    line-height: 1.3;
+}
+
+.error-text {
+    display: block;
+    color: #dc3545;
+    /* đỏ */
+    font-size: 13px;
+    /* nhỏ hơn label chính */
+    margin: 5px 0 0 25px;
+    /* căn bằng label chính */
+}
+
+
+/* Footer cố định dưới chân trang */
+.footer-bar {
+    padding: 12px;
+    background: #fff;
+    border-top: 1px solid #eee;
+}
+
+.save-btn {
+    --background: #007bff !important;
+    --color: #fff !important;
+    font-weight: 700;
+}
+
+/* Khi nút bị disabled (button-disabled), ép nó vẫn đậm */
+ion-button.save-btn.button-disabled {
+    --background: #007bff !important;
+    opacity: 1 !important;
+    /* ép không mờ */
+    --opacity: 1 !important;
+    /* cho iOS */
+}

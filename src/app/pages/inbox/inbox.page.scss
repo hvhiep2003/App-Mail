@@ -1,0 +1,285 @@
+/* File: inbox.page.scss */
+
+.inbox-content {
+  --background: #fff; 
+}
+
+/* STYLE CHO THANH TÌM KIẾM - CẬP NHẬT: Kéo dài hết màn hình */
+.search-container {
+    padding: 10px 0; /* Padding trên dưới 10px, KHÔNG có padding ngang */
+    background: #fff; 
+}
+
+.custom-searchbar {
+  --background: #f0f0f0; 
+  --border-radius: 12px; 
+  margin: 0; /* Loại bỏ margin ngang để kéo dài hết màn hình */
+  padding: 0; 
+  
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+
+  ion-searchbar-ios {
+      --box-shadow: none; 
+      padding-top: 0;
+      padding-bottom: 0;
+  }
+}
+
+/* MAIL ITEM STYLING */
+.mail-item {
+  display: flex;
+  align-items: flex-start; 
+  padding: 12px 16px; 
+  border-bottom: 1px solid #ddd; 
+  cursor: pointer;
+  position: relative; 
+}
+
+/* CONTAINER CHO DẤU CHẤM XANH & AVATAR */
+.mail-visual-container {
+  position: relative; 
+  margin-right: 12px;
+  flex-shrink: 0;
+  // Điều chỉnh lề trái để chấm xanh nằm ngoài cùng
+  padding-left: 10px; 
+}
+
+/* DẤU CHẤM XANH CHƯA ĐỌC */
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #007aff; /* Màu xanh sáng */
+  border-radius: 50%;
+  position: absolute;
+  left: 0; /* Đặt chấm xanh ở lề trái của container visual */
+  top: 50%; 
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+
+/* AVATAR (Gradient màu tím-xanh như trong ảnh) */
+.mail-avatar {
+  width: 40px;
+  height: 40px;
+  // Gradient màu tím-xanh
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); 
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  flex-shrink: 0; 
+}
+
+/* Ẩn mail-visual-container và căn chỉnh checkbox khi ở chế độ Edit */
+.mail-item .selection-area.edit-mode-active ~ .mail-visual-container {
+  display: none;
+}
+.mail-item .selection-area.edit-mode-active {
+   width: 52px; 
+}
+
+
+/* KHU VỰC NỘI DUNG MAIL */
+.mail-item-content {
+  flex-grow: 1; 
+  min-width: 0; 
+}
+
+.mail-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: row; 
+  margin-bottom: 4px; 
+  width: 100%; 
+}
+
+.mail-sender {
+  font-size: 15px; 
+  font-weight: 500; 
+  color: #121111;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1; 
+}
+
+.mail-time-status {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-left: 10px;
+}
+
+/* Thẻ "Thư mới" (Như ảnh) */
+.status-badge {
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #007aff; // Màu xanh sáng như dot
+  padding: 2px 6px;
+  border-radius: 12px;
+  white-space: nowrap;
+  margin-right: 8px;
+  height: 18px; 
+  display: flex;
+  align-items: center;
+}
+
+.mail-time {
+  font-size: 13px;
+  color: #999;
+  align-self: flex-start; 
+  flex-shrink: 0;
+}
+
+.mail-subject {
+  font-size: 16px; 
+  color: #121111; 
+  font-weight: bold; // Subject in đậm
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0;
+  margin-bottom: 4px; 
+}
+
+.mail-preview {
+  font-size: 14px; 
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Chữ in đậm khi chưa đọc (dùng cho sender/subject) */
+.unread-text {
+  font-weight: bold !important;
+}
+/* END MAIL ITEM STYLING */
+
+
+/* STYLE CHO BIỂU TƯỢNG GẮN CỜ (DẤU SAO) */
+.mail-item-flag {
+  margin-left: auto; 
+  padding-left: 10px; 
+  display: flex; 
+  align-items: center; 
+  height: 100%; 
+  padding-top: 5px; 
+
+  ion-icon {
+    font-size: 18px; 
+  }
+}
+
+/* CẬP NHẬT KÍCH THƯỚC VÀ IN ĐẬM CHỮ CHO HỘP THƯ ĐẾN */
+ion-header ion-toolbar ion-title {
+  /* Giảm kích thước chữ tiêu đề để tránh tràn */
+  font-size: 16px; 
+  /* IN ĐẬM CHỮ HỘP THƯ ĐẾN */
+  font-weight: bold; 
+}
+
+/* Chỉnh kích thước chữ nhỏ hơn cho các nút ở slot="end" để giải phóng không gian cho ion-title */
+ion-header ion-toolbar ion-buttons[slot="end"] ion-button {
+  text-transform: none; 
+  font-weight: 600; 
+  
+  /* BỔ SUNG FIX LỖI TRÀN HEADER */
+  font-size: 14px; 
+  --padding-end: 8px; 
+  --padding-start: 8px;
+}
+
+/* Bỏ in đậm và chỉnh size cho nút Chọn tất cả/Bỏ chọn */
+ion-header ion-toolbar ion-buttons[slot="end"] .not-bold-button {
+  font-weight: normal !important; 
+  font-size: 14px !important; 
+}
+
+
+/* STYLE CHO FOOTER CÔNG CỤ CHỈNH SỬA MỚI (NÚT SOLID/CLEAR) */
+.edit-toolbar {
+  ion-toolbar {
+    --background: #f5f5f5; 
+    --border-width: 1px 0 0 0;
+    --border-style: solid;
+    --border-color: #ffffff;
+    
+    display: flex;
+    align-items: center;
+    min-height: 70px; 
+    padding: 0;
+  }
+  
+  ion-grid {
+    width: 100%;
+    padding: 0 16px; 
+  }
+  
+  .footer-edit-button {
+    --padding-start: 24px;
+    --padding-end: 24px;
+    --border-radius: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    /* FIX LỖI VIẾT HOA: Đảm bảo nút không bị uppercase */
+    text-transform: none !important; 
+  }
+}
+
+/* Selection Checkbox & Area */
+.selection-area {
+  width: 0;
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.selection-area.edit-mode-active {
+  width: 32px; 
+  opacity: 1;
+  padding-right: 8px;
+}
+
+.selection-checkbox {
+  --checkbox-background-checked: var(--ion-color-primary);
+  --border-radius: 50%;
+  --size: 20px;
+}
+
+/* FIX LỖI MÀU XANH: Thay thế tô màu nền bằng đường viền màu xanh khi thư được chọn trong Edit Mode */
+.mail-item.selected-item {
+  border-left: 3px solid var(--ion-color-primary); 
+  padding-left: 13px; /* Giảm padding để bù lại chiều rộng của border (16px - 3px) */
+}
+
+/* Xóa style cũ của .selected-item nếu nó có ở đâu đó */
+.selected-item {
+  background: transparent;
+}
+
+
+/* GLOBAL POPOVER STYLE */
+.edit-footer-popover {
+  --width: 210px; 
+  --background: #ffffff;
+  --border-radius: 10px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.05);
+  
+  .popover-content {
+      padding: 0; 
+  }
+}

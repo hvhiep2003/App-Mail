@@ -1,0 +1,142 @@
+<ion-header>
+  <ion-toolbar class="toolbar-custom">
+    <ion-title>Thêm mới tài khoản</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="goBack()">
+        <ion-icon name="close-outline" style="font-size:30px;color:black"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="add-user-content">
+
+  <!-- <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <div class="form-group">
+      <label>Tên người dùng</label>
+      <div class="input-box">
+        <ion-input placeholder="Nhập tên người dùng" formControlName="username"></ion-input>
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <label>Địa chỉ email</label>
+      <div class="input-box">
+        <ion-input placeholder="...@..." formControlName="email" type="email"></ion-input>
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <label>Mật khẩu</label>
+      <div class="input-box input-with-btn">
+        <ion-input [type]="showPassword ? 'text' : 'password'" placeholder="Nhập mật khẩu"
+          formControlName="password"></ion-input>
+        <ion-button fill="clear" (click)="toggleShow('password')" type="button">
+          <ion-icon [name]="showPassword ? 'eye-outline' : 'eye-off-outline'"></ion-icon>
+        </ion-button>
+      </div>
+
+      <div class="password-hint">
+        <div>* Mật khẩu có ít nhất 8 kí tự</div>
+        <div>* Có ít nhất 1 ký tự in hoa</div>
+        <div>* Có ít nhất 1 ký tự thường</div>
+        <div>* Có ít nhất 1 chữ số</div>
+        <div>* Có ít nhất 1 ký tự đặc biệt</div>
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <label>Xác nhận mật khẩu</label>
+      <div class="input-box input-with-btn">
+        <ion-input [type]="showConfirm ? 'text' : 'password'" placeholder="Nhập lại mật khẩu"
+          formControlName="confirm"></ion-input>
+        <ion-button fill="clear" (click)="toggleShow('confirm')" type="button">
+          <ion-icon [name]="showConfirm ? 'eye-outline' : 'eye-off-outline'"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </form> -->
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <!-- Tên người dùng -->
+    <div class="form-group">
+      <label>Tên người dùng</label>
+      <div class="input-box">
+        <ion-input placeholder="Nhập tên người dùng" formControlName="username"></ion-input>
+      </div>
+      <!-- Thông báo lỗi -->
+      <label class="error-text" *ngIf="form.get('email')?.touched && form.get('email')?.hasError('required')">
+        Vui lòng nhập email đầy đủ
+      </label>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label>Địa chỉ email</label>
+      <div class="input-box">
+        <ion-input placeholder="...@..." formControlName="email" type="email"></ion-input>
+      </div>
+      <!-- Thông báo lỗi -->
+      <label class="error-text" *ngIf="form.get('email')?.touched && form.get('email')?.hasError('required')">
+        Vui lòng nhập email đầy đủ
+      </label>
+      <label class="error-text" *ngIf="form.get('email')?.touched && form.get('email')?.hasError('email')">
+        Email không hợp lệ
+      </label>
+      <label class="error-text" *ngIf="emailUsed">
+        Email đã được sử dụng
+      </label>
+    </div>
+
+    <!-- Mật khẩu -->
+    <div class="form-group">
+      <label>Mật khẩu</label>
+      <div class="input-box input-with-btn">
+        <ion-input [type]="showPassword ? 'text' : 'password'" placeholder="Nhập mật khẩu"
+          formControlName="password"></ion-input>
+        <ion-button fill="clear" (click)="toggleShow('password')" type="button">
+          <ion-icon [name]="showPassword ? 'eye-outline' : 'eye-off-outline'"></ion-icon>
+        </ion-button>
+      </div>
+      <label class="error-text" *ngIf="form.get('password')?.touched && form.get('password')?.hasError('pattern')">
+        Mật khẩu phải có ít nhất 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc biệt
+      </label>
+
+    </div>
+    <div class="password-hint">
+      <div>* Mật khẩu có ít nhất 8 kí tự</div>
+      <div>* Có ít nhất 1 ký tự in hoa</div>
+      <div>* Có ít nhất 1 ký tự thường</div>
+      <div>* Có ít nhất 1 chữ số</div>
+      <div>* Có ít nhất 1 ký tự đặc biệt</div>
+    </div>
+
+    <!-- Xác nhận mật khẩu -->
+    <div class="form-group">
+      <label>Xác nhận mật khẩu</label>
+      <div class="input-box input-with-btn">
+        <ion-input [type]="showConfirm ? 'text' : 'password'" placeholder="Nhập lại mật khẩu"
+          formControlName="confirm"></ion-input>
+        <ion-button fill="clear" (click)="toggleShow('confirm')" type="button">
+          <ion-icon [name]="showConfirm ? 'eye-outline' : 'eye-off-outline'"></ion-icon>
+        </ion-button>
+      </div>
+      <ion-text color="danger" *ngIf="passwordMismatch">
+        Xác nhận mật khẩu không khớp
+      </ion-text>
+    </div>
+  </form>
+
+</ion-content>
+
+<!-- Footer -->
+<ion-footer class="footer-bar">
+  <ion-button expand="block" [disabled]="form.invalid" (click)="submit()">
+    THÊM MỚI
+  </ion-button>
+</ion-footer>

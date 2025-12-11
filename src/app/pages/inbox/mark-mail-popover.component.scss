@@ -1,0 +1,30 @@
+/* Styling riêng cho nội dung Popover đánh dấu */
+
+.popover-list-header {
+  min-height: 38px;
+  --min-height: 38px;
+  padding-top: 0; /* Loại bỏ khoảng trắng trên */
+  padding-bottom: 0; /* Loại bỏ khoảng trắng dưới */
+  
+  ion-label {
+    font-size: 15px;
+    color: #999;
+    font-weight: 500;
+  }
+}
+
+ion-item {
+  --inner-padding-end: 16px;
+  --inner-padding-start: 16px;
+  --padding-start: 0;
+  min-height: 44px;
+  
+  ion-label {
+    font-size: 15px;
+  }
+  
+  ion-icon {
+    font-size: 20px;
+    color: var(--ion-color-medium);
+  }
+}

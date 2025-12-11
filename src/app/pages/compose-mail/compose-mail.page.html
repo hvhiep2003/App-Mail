@@ -1,0 +1,90 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>THƯ MỚI</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button 
+        (click)="sendMail()" 
+        color="primary" 
+        fill="solid" 
+        shape="round" 
+        [disabled]="!recipient || !subject || !body">
+        Gửi
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list lines="full" class="compose-list">
+    
+    <ion-item class="input-item">
+      <ion-label position="stacked">Đến:</ion-label>
+      <ion-input 
+        placeholder="Recipient" 
+        type="email" 
+        [(ngModel)]="recipient"
+        name="recipient"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item class="input-item">
+      <ion-label position="stacked">Từ:</ion-label>
+      <ion-select 
+        interface="popover" 
+        [value]="senderEmail" 
+        (ionChange)="onSenderEmailChange($event)"
+        placeholder="Chọn tài khoản gửi"
+      >
+        <ion-select-option *ngFor="let email of availableEmails" [value]="email">
+          {{ email }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="input-item">
+      <ion-label position="stacked">Chủ đề</ion-label>
+      <ion-input 
+        placeholder="Chủ đề thư"
+        [(ngModel)]="subject"
+        name="subject"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item class="content-area">
+      <ion-textarea 
+        rows="15" 
+        autoGrow="true" 
+        placeholder="Nhập nội dung thư"
+        [(ngModel)]="body"
+        name="body"
+      ></ion-textarea>
+    </ion-item>
+
+  </ion-list>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" title="Đính kèm Ảnh">
+        <ion-icon name="image-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" title="Chụp ảnh">
+        <ion-icon name="camera-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" title="Đính kèm Tài liệu">
+        <ion-icon name="document-text-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" title="Đặt lịch gửi" (click)="presentScheduleModal()">
+        <ion-icon name="calendar-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

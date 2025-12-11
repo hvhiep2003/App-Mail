@@ -1,0 +1,82 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>THƯ NHÁP</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button color="primary" (click)="toggleEditMode()">
+        {{ isEditMode ? 'Xong' : 'Sửa' }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="draft-content">
+  <!-- Search Bar -->
+  <div class="search-container">
+    <ion-searchbar 
+      placeholder="Tìm kiếm"
+      [(ngModel)]="searchQuery"
+      (ionInput)="onSearch($event)"
+      showCancelButton="never"
+      class="custom-searchbar"
+    ></ion-searchbar>
+  </div>
+
+  <!-- Draft List -->
+  <div class="draft-list-container">
+    <!-- Empty State -->
+    <div *ngIf="filteredDrafts.length === 0" class="empty-state">
+      <ion-text>
+        <p class="empty-message">Không có nháp nào</p>
+      </ion-text>
+    </div>
+
+    <!-- Draft Items -->
+    <div *ngFor="let draft of filteredDrafts" class="draft-item" [class.selected]="selectedForEdit === draft.id" (click)="!isEditMode && openDraft(draft)">
+      <div class="draft-item-checkbox" *ngIf="isEditMode">
+        <ion-checkbox 
+          [checked]="isSelected(draft.id)"
+          (ionChange)="toggleSelectDraft(draft.id)"
+        ></ion-checkbox>
+      </div>
+
+      <!-- Show checkmark when selected for edit -->
+      <div class="draft-item-checkmark" *ngIf="!isEditMode && selectedForEdit === draft.id">
+        <ion-icon name="checkmark-circle" color="primary"></ion-icon>
+      </div>
+
+      <div class="draft-item-content">
+        <div class="draft-item-header">
+          <h3 class="draft-recipient">{{ draft.recipient || 'Chưa có người nhận' }}</h3>
+          <span class="draft-time">{{ draft.date | date:'short' }}</span>
+        </div>
+        <p class="draft-subject">{{ draft.subject || 'Chưa có chủ đề' }}</p>
+        <p class="draft-preview">{{ draft.body | slice:0:60 }}...</p>
+      </div>
+
+      <div class="draft-item-status" *ngIf="!isEditMode">
+        <span class="status-badge">{{ draft.status }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete FAB (visible when edit mode) -->
+  <ion-fab *ngIf="isEditMode && selectedDrafts.size > 0" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="danger" (click)="deleteSelectedDrafts()">
+      <ion-icon name="trash"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- Compose FAB (visible when not edit mode) -->
+  <ion-fab *ngIf="!isEditMode" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary" (click)="composeMail()">
+      <ion-icon name="pencil" style="font-size: 32px;"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

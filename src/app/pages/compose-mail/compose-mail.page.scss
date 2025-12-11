@@ -1,0 +1,121 @@
+/* Nhắm mục tiêu nút GỬI trong Header */
+ion-header {
+  ion-toolbar {
+
+    // Nhắm mục tiêu vào ion-button trong slot="end" (nơi thường đặt nút Gửi)
+    ion-buttons[slot="end"] ion-button {
+
+      // Tăng padding bên trái của nút để kéo dài hình nền
+      --padding-start: 12px;
+
+      // Tăng padding bên phải của nút để kéo dài hình nền
+      --padding-end: 12px;
+
+      // (Tùy chọn) Điều chỉnh padding dọc nếu nút quá cao/thấp
+      // --padding-top: 8px; 
+      // --padding-bottom: 8px;
+
+    }
+  }
+}
+
+/* Đảm bảo nội dung chính (body) của thư chiếm toàn bộ không gian còn lại */
+.content-area {
+  --border-width: 0;
+
+  ion-textarea {
+    width: 100%;
+    min-height: 200px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+/* Định dạng chung cho các input item để có khoảng cách tốt hơn */
+.compose-list {
+  padding: 0;
+  margin: 0;
+}
+
+.input-item {
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  border-bottom: 1px solid var(--ion-color-step-150, #d7d8da);
+}
+
+.input-item ion-label {
+  font-size: 16px !important;
+}
+
+
+/* --- FIX ACTION SHEET BUTTON TEXT ALIGNMENT --- */
+::ng-deep .pill-action-sheet {
+  .pill-button {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .pill-button::part(native) {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .pill-button .button-inner {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+}
+
+/* --- Định dạng footer cho thanh công cụ đính kèm (ĐÃ UPDATE) --- */
+ion-footer ion-toolbar {
+  --background: white;
+  border-top: 1px solid var(--ion-color-step-150, #d7d8da);
+
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+
+  /* 👉 Tăng khoảng cách hai góc màn hình */
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+ion-footer ion-toolbar ion-buttons[slot="start"] {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+ion-footer ion-button {
+  margin: 0 !important;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+}
+
+ion-footer ion-icon {
+  font-size: 24px;
+}
+
+/* Kéo dài nút GỬI trong Header */
+ion-header ion-toolbar ion-buttons[slot="end"] ion-button {
+
+  // Tăng padding bên trái của nút
+  // Giá trị này sẽ kéo dài hình nền xanh
+  --padding-start: 12px;
+
+  // Tăng padding bên phải của nút
+  --padding-end: 12px;
+
+  // (Tùy chọn) Điều chỉnh padding dọc nếu cần làm nút cao hơn/thấp hơn
+  // --padding-top: 8px; 
+  // --padding-bottom: 8px;
+}
+
+ion-button[disabled] {
+  --background: #7aa7ff !important;
+  opacity: 1 !important;
+  // pointer-events: none; // không cho click
+}

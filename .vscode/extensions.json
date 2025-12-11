@@ -1,0 +1,12 @@
+{
+<<<<<<< HEAD
+    "recommendations": [
+       "Webnative.webnative"
+    ]
+}
+=======
+  "recommendations": [
+    "Webnative.webnative"
+  ]
+}
+>>>>>>> origin/feature/compose-mail

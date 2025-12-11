@@ -1,0 +1,458 @@
+/* ===== WRAPPER ===== */
+.page-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f5f5;
+}
+
+/* ===== HEADER ===== */
+.toolbar-custom {
+    display: flex;
+    align-items: center;
+    /* thẳng hàng theo chiều dọc */
+    padding: 0 10px;
+    height: 56px;
+}
+
+
+/* Container search + admin */
+.search-admin-container {
+    display: flex;
+    align-items: center;
+    /* thẳng hàng */
+    flex: 1;
+    /* chiếm hết không gian còn lại */
+    gap: 10px;
+}
+
+/* Searchbar */
+.search-custom {
+    flex: 1;
+    /* chiếm phần lớn */
+    --background: #e0e0e0;
+    --border-radius: 20px;
+    height: 36px;
+    --padding-start: 10px;
+    --padding-end: 10px;
+}
+
+
+/* Admin */
+.header-name {
+    font-weight: bold;
+    font-size: 17px;
+    white-space: nowrap;
+    padding-bottom: 10px;
+    padding-right: 8px;
+}
+
+
+/* ===== SECTION TITLE ===== */
+.section-title {
+    margin: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+}
+
+/* ===== MAIL LIST ITEM ===== */
+.mail-item {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    margin: 6px 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.mail-item:hover {
+    background-color: #b9d8f6;
+}
+
+.av-circle {
+    width: 40px;
+    height: 40px;
+    background: #27c5c8;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.mail-info {
+    flex: 1;
+}
+
+.mail-title {
+    font-weight: 600;
+    color: #000;
+    padding: 1px;
+}
+
+.mail-subtitle {
+    font-size: 18px;
+    color: #555;
+}
+
+.date {
+    font-size: 18px;
+    color: #777;
+}
+
+ion-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+/* ===== MENU ===== */
+/* MENU HEADER */
+.menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.left-title {
+    font-weight: bold;
+    font-size: 18px;
+    padding-left: 10px;
+}
+
+.right-admin {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-right: 16px;
+}
+
+.bell {
+    font-size: 22px;
+}
+
+.admin-name {
+    font-weight: bold;
+}
+
+
+/* ==== SOẠN + TÌM ==== */
+.menu-actions-row {
+    // display: flex;
+    gap: 10px;
+    padding: 10px;
+}
+
+.action-box {
+    flex: 1 1 0;
+    /* đảm bảo chia đều không lệch */
+    min-width: 0;
+    /* tránh ô tìm mở rộng quá mức */
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    height: 44px;
+    padding: 0 12px;
+
+    // border: 1px solid #d0d0d0;
+    border-radius: 20px;
+    background: #fff;
+    font-weight: 500;
+}
+
+.action-box ion-icon {
+    font-size: 20px;
+}
+
+/* SOẠN */
+.compose-box {
+    background: #d1e0f8;
+    // border-color: #0b57d0;
+    color: rgb(13, 13, 13);
+}
+
+.compose-box:hover {
+    background: #0b57d0;
+    border-color: #0b57d0;
+    color: #fff;
+}
+
+.compose-box:hover ion-icon {
+    color: #fff;
+}
+
+
+/* TÌM */
+.search-box {
+    border: 1px solid #d0d0d0;
+}
+
+.search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent !important;
+    font-size: 15px;
+    color: black;
+
+}
+
+.search-box ion-icon {
+    flex-shrink: 0;
+    /* Không cho icon bị ép nhỏ */
+    width: 20px;
+    /* Giữ nguyên kích thước icon */
+    height: 20px;
+}
+
+
+/* ===== MENU ITEMS & LOGOUT ===== */
+.menu-item,
+.logout-item {
+    --inner-border-width: 0;
+    --border-style: none;
+    --border-width: 0 !important;
+
+    margin: 6px 12px;
+    --padding-start: 16px;
+    --min-height: 48px;
+    border-radius: 12px;
+    /* tất cả bo góc bằng nhau */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    transition: background 0.3s, color 0.3s;
+    --background: #fff;
+    /* nền mặc định giống nhau */
+    color: #000;
+    /* chữ mặc định */
+}
+
+/* Hover tất cả item */
+.menu-item:hover,
+.logout-item:hover {
+    --background: #abc4eb !important;
+    /* màu nền hover */
+    color: #4188d9 !important;
+    /* màu chữ hover */
+}
+
+.menu-item:hover ion-icon,
+.logout-item:hover ion-icon {
+    color: #4188d9 !important;
+    /* màu icon hover */
+}
+
+.menu-item:hover span,
+.menu-item:hover .ion-text,
+.logout-item:hover span,
+.logout-item:hover .ion-text {
+    color: #4188d9 !important;
+    /* màu text hover */
+}
+
+
+.logout-container {
+    margin-top: 50px;
+    // // padding: 0 12px 20px 12px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.modal-wrapper {
+    --background: rgba(0, 0, 0, 0.25);
+
+    .modal-box {
+        background: #fff;
+        border-radius: 18px;
+        padding: 20px;
+        width: 92%;
+        margin: 80px auto 0 auto;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 18px;
+
+        .title {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .close-btn {
+            font-size: 26px;
+            cursor: pointer;
+        }
+    }
+
+    /* ----- TOGGLE BLOCK CHUNG ----- */
+    .toggle-block {
+        background: #f4f4f4;
+        /* nền xám như input-box */
+        padding: 8px 14px;
+        /* padding giống input-box */
+        border-radius: 17px;
+        /* bo tròn */
+        display: flex;
+        flex-direction: column;
+        /* sắp xếp label và toggle theo cột */
+        margin-top: 8px;
+    }
+
+    /* Optional: căn toggle bên phải */
+    .toggle-block ion-toggle {
+        align-self: flex-start;
+        /* hoặc flex-end nếu muốn toggle bên phải */
+        zoom: 0.9;
+
+    }
+
+
+    .field-label {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        display: block;
+        margin-top: 8px;
+    }
+
+    .field-desc {
+        margin-top: -5px;
+        display: block;
+        margin-bottom: 8px;
+        color: #666;
+    }
+
+    /* ----- INPUT BOX ----- */
+    .input-box {
+        background: #f4f4f4;
+        padding: 5px 14px;
+        border-radius: 17px;
+
+        ion-input {
+            --padding-start: 0;
+        }
+    }
+
+
+    /* ----- TOGGLE BOX ----- */
+    .toggle-box {
+        background: #f4f4f4;
+        padding: 10px 14px;
+        border-radius: 17px;
+        display: flex;
+        align-items: center;
+
+        ion-toggle {
+            zoom: 0.9;
+        }
+    }
+
+
+    /* ----- TOGGLE ở cuối block ----- */
+    .toggle-icon-wrapper {
+        text-align: right;
+        margin-top: -6px;
+
+        ion-toggle {
+            zoom: 0.9;
+        }
+    }
+
+    /* Khung bao quanh select */
+    .select-box {
+        position: relative;
+        background: #f4f4f4;
+        border: 1px solid #ccc;
+        border-radius: 17px;
+        padding: 5px 14px;
+    }
+
+
+    /* Mũi tên dropdown */
+    .select-box::after {
+        // content: "▼";
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        font-size: 12px;
+        color: #666;
+    }
+
+
+    /* Remove padding mặc định của ion-select để vừa khung */
+    .select-box ion-select {
+        width: 100%;
+        --padding-start: 0;
+        --padding-end: 25px;
+        /* tạo chỗ cho mũi tên */
+    }
+
+
+    /* ----- Buttons ----- */
+    .button-row {
+        margin-top: 26px;
+        display: flex;
+        justify-content: space-between;
+
+        ion-button {
+            width: 48%;
+            height: 35px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .confirm {
+            --background: #007bff;
+            color: #fff;
+        }
+    }
+
+    .folder-children ion-item {
+        --padding-start: 40px;
+    }
+
+}
+
+/* ===== FIX CHỮ KHÔNG HIỆN TRONG POPOVER ===== */
+
+.popover-menu {
+    ion-item.popover-item {
+        --background: #fff !important;
+        color: #000 !important;
+        --color: #000 !important;
+
+        /* Bắt buộc để text hiện */
+        &::part(native),
+        &::part(inner),
+        .input-wrapper,
+        span,
+        div {
+            color: #000 !important;
+        }
+
+        /* tránh bị nén chiều cao */
+        --min-height: 38px !important;
+        height: 38px !important;
+    }
+}
+
+.child-folders {
+    padding-left: 20px;
+}
+
+.child-item {
+    --padding-start: 40px;
+    /* hoặc chỉnh theo ý bạn */
+}

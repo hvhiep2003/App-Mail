@@ -1,0 +1,181 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+// @import '@ionic/angular/css/palettes/dark.system.css';
+
+
+/* ===============================
+   FIX BUTTON GROUP
+   =============================== */
+.custom-delete-alert .alert-button-group.sc-ion-alert-ios {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  /* NGĂN KHÔNG CHO NÓ WRAP */
+  justify-content: space-between !important;
+  gap: 12px !important;
+  /* KHOẢNG CÁCH GIỮA 2 NÚT */
+  padding: 14px 20px !important;
+  border-top: none !important;
+}
+
+/* ===============================
+   BUTTON STYLE
+   =============================== */
+.custom-delete-alert .alert-button {
+  flex: 1 1 auto !important;
+  /* 2 nút bằng nhau */
+  margin: 0 !important;
+  border-radius: 25px !important;
+  padding: 12px 0 !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+
+/* ===============================
+   NÚT HỦY
+   =============================== */
+.custom-delete-alert .alert-button-role-cancel {
+  background: #e9e9e9 !important;
+  color: #333 !important;
+}
+
+/* ===============================
+   NÚT XÓA
+   =============================== */
+.custom-delete-alert .alert-button-role-confirm {
+  background: #ff3b30 !important;
+  color: #fff !important;
+}
+
+
+.pill-action-sheet {
+
+  .action-sheet-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 48px 8px;
+    border-radius: 25px !important;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  /* Target button element trực tiếp */
+  button[type="button"].pill-button {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    padding: 10px 24px !important;
+    border-radius: 25px !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    background: #ffffff !important;
+    position: relative !important;
+  }
+
+  /* Reset Ionic button CSS variables */
+  .pill-button {
+    --padding-start: 0 !important;
+    --padding-end: 0 !important;
+    --inner-padding-start: 0 !important;
+    --inner-padding-end: 0 !important;
+    --padding-top: 0 !important;
+    --padding-bottom: 0 !important;
+  }
+
+  /* Căn giữa text và inner span */
+  .pill-button span {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  /* Nút Xóa nháp */
+  .pill-button.action-sheet-destructive {
+    color: #e74c3c !important;
+    font-weight: 600;
+  }
+
+  /* Nút Lưu nháp */
+  .pill-button.save-button {
+    color: #0221e8 !important;
+    font-weight: 600;
+  }
+
+  /* Nút Hủy */
+  .pill-button.cancel-button {
+    background: #ffffff;
+    color: #000 !important;
+    font-weight: 600;
+    margin-top: 1px;
+  }
+
+  /* Khoảng cách 1px giữa các nút */
+  .pill-button:not(:last-child) {
+    margin-bottom: 1px;
+  }
+
+  ion-backdrop {
+    background: rgba(0, 0, 0, 0.33) !important;
+  }
+}
+
+/* Schedule Modal - Center on screen */
+.schedule-modal {
+  --width: 335px !important;
+  --height: 320px !important;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+
+  ion-content {
+    --padding-top: 0;
+    --padding-bottom: 0;
+    --padding-start: 0;
+    --padding-end: 0;
+  }
+
+  .schedule-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 16px;
+  }
+}

@@ -1,0 +1,44 @@
+<ion-content class="page-bg" fullscreen>
+  <div class="login-container">
+
+    <h1 class="title">ĐĂNG NHẬP</h1>
+    <p class="subtitle">Welcome back!</p>
+
+    <div class="form-group">
+      <label>Tên đăng nhập</label>
+      <ion-item lines="none" class="input-item">
+        <ion-icon slot="start" name="mail-outline"></ion-icon>
+        <ion-input type="email" placeholder="Enter email" [(ngModel)]="username"></ion-input>
+      </ion-item>
+      <ion-text color="danger" *ngIf="errorMessage">{{ errorMessage }}</ion-text>
+    </div>
+
+    <div class="form-group">
+      <label>Mật khẩu</label>
+      <ion-item lines="none" class="input-item">
+        <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+
+        <!-- Bật/tắt mật khẩu -->
+        <ion-input [type]="showPassword ? 'text' : 'password'" placeholder="Enter password" [(ngModel)]="password">
+        </ion-input>
+
+        <!-- Icon mắt -->
+        <ion-icon slot="end" [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" (click)="togglePassword()">
+        </ion-icon>
+      </ion-item>
+
+      <ion-text color="danger" *ngIf="errorMessage">{{ errorMessage }}</ion-text>
+    </div>
+
+
+    <div class="options-row">
+      <ion-checkbox [(ngModel)]="rememberMe"></ion-checkbox>
+      <span>Remember me</span>
+    </div>
+
+    <ion-button expand="block" class="btn-login" (click)="onLogin()">
+      ĐĂNG NHẬP
+    </ion-button>
+
+  </div>
+</ion-content>
