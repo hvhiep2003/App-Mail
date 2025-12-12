@@ -199,6 +199,69 @@ export class AllMailPage implements OnInit {
     }
   }
 
+  markStar(mail: Mail) {
+    const newValue = !mail.isFlagged;
+
+    this.emailService.setStarStatus(mail.id, newValue).subscribe({
+      next: () => {
+        mail.isFlagged = newValue; // Cập nhật UI ngay lập tức
+      },
+      error: err => console.error(err)
+    });
+  }
+
+
+  private handleMarkAction(action: string) {
+    // Logic Đánh dấu
+    if (action === 'readUnread') {
+      const hasUnread = this.mails.some(mail => this.selectedMails.has(mail.id) && !mail.isRead);
+      const targetIsRead = hasUnread ? true : false;
+
+      this.mails.forEach(mail => {
+        if (this.selectedMails.has(mail.id)) {
+          mail.isRead = targetIsRead;
+        }
+      });
+    } else if (action === 'trash') {
+      this.mails = this.mails.filter(mail => !this.selectedMails.has(mail.id));
+    } else if (action === 'flag') {
+
+      const emailIds = Array.from(this.selectedMails);
+
+      const hasUnflagged = this.mails.some(mail =>
+        this.selectedMails.has(mail.id) && !mail.isFlagged
+      );
+
+      // ⭐ 1. Cập nhật UI trước
+      this.mails.forEach(mail => {
+        if (this.selectedMails.has(mail.id)) {
+          mail.isFlagged = hasUnflagged ? true : false;
+        }
+      });
+
+      // ⭐ 2. Gửi API sau (không ảnh hưởng UI)
+      if (hasUnflagged) {
+        this.emailService.markEmailsStarred(emailIds).subscribe();
+      } else {
+        this.emailService.unmarkEmailsStarred(emailIds).subscribe();
+      }
+
+    }
+
+
+    this.filteredMails = [...this.mails];
+    this.selectedMails.clear();
+    this.isEditMode = false;
+  }
+
+  private updateStarUI(starred: boolean) {
+    this.mails.forEach(mail => {
+      if (this.selectedMails.has(mail.id)) {
+        mail.isFlagged = starred;
+      }
+    });
+  }
+
   async moveMails(event: Event) {
     if (this.selectedMails.size === 0) return;
 
@@ -222,51 +285,30 @@ export class AllMailPage implements OnInit {
     }
   }
 
-  private handleMarkAction(action: string) {
-    if (action === 'readUnread') {
-      const hasUnread = this.mails.some(mail => this.selectedMails.has(mail.id) && !mail.isRead);
-      const targetIsRead = hasUnread ? true : false;
-
-      this.mails.forEach(mail => {
-        if (this.selectedMails.has(mail.id)) {
-          mail.isRead = targetIsRead;
-        }
-      });
-    } else if (action === 'trash') {
-      this.mails = this.mails.filter(mail => !this.selectedMails.has(mail.id));
-    } else if (action === 'flag') {
-      const hasUnflagged = this.mails.some(mail => this.selectedMails.has(mail.id) && !mail.isFlagged);
-      const targetIsFlagged = hasUnflagged ? true : false;
-
-      this.mails.forEach(mail => {
-        if (this.selectedMails.has(mail.id)) {
-          mail.isFlagged = targetIsFlagged;
-        }
-      });
-    }
-
-    this.filteredMails = [...this.mails];
-    this.selectedMails.clear();
-    this.isEditMode = false;
-  }
-
-  private handleMoveAction(folder: string) {
-    this.mails = this.mails.filter(mail => !this.selectedMails.has(mail.id));
-
-    this.filteredMails = [...this.mails];
-    this.selectedMails.clear();
-    this.isEditMode = false;
-  }
-
   getAvatarText(sender: string): string {
     return sender ? sender.charAt(0).toUpperCase() : '';
   }
 
-  // openEmail(mail: MailDTO) {
-  //   this.router.navigate(['/email-detail', mail.id], {
-  //     state: { email: mail }
-  //   });
-  // }
+
+  private handleMoveAction(folder: string) {
+    if (folder !== 'trash') return;
+
+    const emailIds = Array.from(this.selectedMails);
+
+    this.emailService.moveEmailsToTrash(emailIds).subscribe({
+      next: () => {
+        this.mails = this.mails.filter(mail => !emailIds.includes(mail.id));
+        this.filteredMails = [...this.mails];
+        this.selectedMails.clear();
+        this.isEditMode = false;
+      },
+      error: err => {
+        console.error('Move to trash failed:', err);
+      }
+    });
+
+  }
+
 
   openEmail(mail: MailDTO) {
     this.router.navigate(['/email-detail'], {

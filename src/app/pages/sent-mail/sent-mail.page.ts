@@ -250,15 +250,40 @@ export class SentMailPage implements OnInit {
     } else if (action === 'trash') {
       this.mails = this.mails.filter(mail => !this.selectedMails.has(mail.id));
     } else if (action === 'flag') {
-      const hasUnflagged = this.mails.some(mail => this.selectedMails.has(mail.id) && !mail.isFlagged);
-      const targetIsFlagged = hasUnflagged ? true : false;
 
+      const emailIds = Array.from(this.selectedMails);
+
+      const hasUnflagged = this.mails.some(mail =>
+        this.selectedMails.has(mail.id) && !mail.isFlagged
+      );
+
+      // ⭐ 1. Cập nhật UI trước
       this.mails.forEach(mail => {
         if (this.selectedMails.has(mail.id)) {
-          mail.isFlagged = targetIsFlagged;
+          mail.isFlagged = hasUnflagged ? true : false;
         }
       });
+
+      // ⭐ 2. Gửi API sau (không ảnh hưởng UI)
+      if (hasUnflagged) {
+        this.emailService.markEmailsStarred(emailIds).subscribe();
+      } else {
+        this.emailService.unmarkEmailsStarred(emailIds).subscribe();
+      }
     }
+
+    this.filteredMails = [...this.mails];
+    this.selectedMails.clear();
+    this.isEditMode = false;
+  }
+
+
+  private updateStarUI(starred: boolean) {
+    this.mails.forEach(mail => {
+      if (this.selectedMails.has(mail.id)) {
+        mail.isFlagged = starred;
+      }
+    });
 
     this.filteredMails = [...this.mails];
     this.selectedMails.clear();

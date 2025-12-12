@@ -350,8 +350,8 @@ export class MailboxPage {
       case 'inbox': return '/inbox';
       case 'sent': return '/sent-mail';
       case 'draft': return '/draft-mail';
-      case 'trash': return '/spam-mail';
-      case 'spam': return '/trash-mail';
+      case 'trash': return '/trash-mail';
+      case 'spam': return '/spam-mail';
       default: return '/folder-custom/' + name.toLowerCase(); // folder tự tạo
     }
   }

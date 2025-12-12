@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, NgFor, SlicePipe } from '@angular/common'; 
+import { CommonModule, NgFor, SlicePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonicModule, PopoverController } from '@ionic/angular'; 
+import { IonicModule, PopoverController } from '@ionic/angular';
 // Chỉ import để sử dụng trong TypeScript (popoverController.create)
-import { MarkMailPopoverComponent } from '../inbox/mark-mail-popover.component'; 
-import { MoveMailPopoverComponent } from '../inbox/move-mail-popover.component'; 
+import { MarkMailPopoverComponent } from '../inbox/mark-mail-popover.component';
+import { MoveMailPopoverComponent } from '../inbox/move-mail-popover.component';
+import { EmailService } from '../all-mail/email.service';
 
 
 interface Mail {
@@ -15,7 +16,7 @@ interface Mail {
   body: string;
   date: Date;
   isRead: boolean;
-  isFlagged: boolean; 
+  isFlagged: boolean;
 }
 
 @Component({
@@ -24,11 +25,11 @@ interface Mail {
   styleUrls: ['./trash-mail.page.scss'],
   standalone: true,
   imports: [
-    IonicModule, 
-    CommonModule, 
-    FormsModule, 
+    IonicModule,
+    CommonModule,
+    FormsModule,
     NgFor,
-    SlicePipe 
+    SlicePipe
   ]
 })
 export class TrashMailPage implements OnInit {
@@ -36,48 +37,41 @@ export class TrashMailPage implements OnInit {
   searchQuery: string = '';
   selectedMails: Set<string> = new Set();
   selectedForView: string | null = null;
-  
+
   // Dữ liệu mẫu (Giả định là thư đã bị xóa)
-  mails: Mail[] = [
-    {
-      id: '1',
-      sender: 'Spam@ads.com',
-      subject: 'Bạn đã trúng thưởng!',
-      body: 'Đây là thư rác đã bị xóa vào thùng rác...',
-      date: new Date('2025-01-10T11:00:00'),
-      isRead: false,
-      isFlagged: false 
-    },
-    {
-      id: '2',
-      sender: 'Nguyen Van A',
-      subject: 'Hóa đơn tháng 12',
-      body: 'Tôi đã gửi hóa đơn cho bạn. Vui lòng kiểm tra...',
-      date: new Date('2025-01-08T09:30:00'),
-      isRead: true,
-      isFlagged: false 
-    },
-    {
-      id: '3',
-      sender: 'Test mail',
-      subject: 'Thư nháp bị xóa',
-      body: 'Nội dung thư nháp...',
-      date: new Date('2025-01-05T15:45:00'),
-      isRead: true,
-      isFlagged: true 
-    },
-  ];
+  mails: Mail[] = [];
 
   filteredMails: Mail[] = [];
 
-  constructor(private router: Router, private popoverController: PopoverController) {}
+  constructor(private router: Router, private popoverController: PopoverController, private emailService: EmailService) { }
 
   ngOnInit() {
-    this.filteredMails = [...this.mails];
+    this.loadTrashEmails();
+  }
+
+  loadTrashEmails() {
+    const userEmail = localStorage.getItem('userEmail'); // hoặc từ AuthService
+    if (!userEmail) return;
+
+    this.emailService.getTrashEmails(userEmail).subscribe(emails => {
+      this.mails = emails.map(e => ({
+        id: e.id,
+        sender: typeof e.sender === 'object' ? e.sender.emailAddress : e.sender,
+        subject: e.subject,
+        body: e.body,
+        date: new Date(e.createdAt), // dùng createdAt để hiển thị thời gian
+        isRead: e.isRead,
+        isFlagged: e.starred
+      }));
+
+      this.filteredMails = [...this.mails];
+    }, err => {
+      console.error('Lỗi khi load thùng rác:', err);
+    });
   }
 
   goBack() {
-    this.router.navigate(['/mailbox']); 
+    this.router.navigate(['/mailbox']);
   }
 
   toggleEditMode() {
@@ -98,7 +92,7 @@ export class TrashMailPage implements OnInit {
 
   selectAllMails() {
     const allSelected = this.selectedMails.size === this.filteredMails.length && this.filteredMails.length > 0;
-    
+
     if (allSelected) {
       this.selectedMails.clear();
     } else {
@@ -110,9 +104,9 @@ export class TrashMailPage implements OnInit {
   getAvatarText(sender: string): string {
     return sender.charAt(0).toUpperCase();
   }
-  
+
   getRelativeTime(mailDate: Date): string {
-    const now = new Date('2025-01-15T12:00:00'); 
+    const now = new Date('2025-01-15T12:00:00');
     const date = new Date(mailDate);
 
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -120,23 +114,22 @@ export class TrashMailPage implements OnInit {
 
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
-    
+
     const diffTime = today.getTime() - mailDay.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     const shortTime = date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
 
     if (mailDay.getTime() === today.getTime()) {
-      return shortTime; 
+      return shortTime;
     } else if (mailDay.getTime() === yesterday.getTime()) {
-      return 'Hôm qua'; 
+      return 'Hôm qua';
     } else if (diffDays > 0 && diffDays <= 7) {
-      return 'Tuần trước'; 
+      return 'Tuần trước';
     } else {
       return date.toLocaleDateString('vi-VN', { year: '2-digit', month: '2-digit', day: '2-digit' });
     }
   }
-
 
   selectMail(mail: Mail) {
     this.selectedForView = mail.id;
@@ -158,12 +151,12 @@ export class TrashMailPage implements OnInit {
     if (this.selectedMails.size === 0) return;
 
     const popover = await this.popoverController.create({
-      component: MarkMailPopoverComponent, 
+      component: MarkMailPopoverComponent,
       event: event,
       translucent: true,
-      side: 'top', 
+      side: 'top',
       alignment: 'start',
-      cssClass: 'edit-footer-popover' 
+      cssClass: 'edit-footer-popover'
     });
 
     await popover.present();
@@ -178,20 +171,20 @@ export class TrashMailPage implements OnInit {
     if (this.selectedMails.size === 0) return;
 
     const popover = await this.popoverController.create({
-      component: MoveMailPopoverComponent, 
+      component: MoveMailPopoverComponent,
       event: event,
       translucent: true,
-      side: 'top', 
+      side: 'top',
       alignment: 'end',
       cssClass: 'edit-footer-popover',
       componentProps: {
         // TRUYỀN THƯ MỤC HIỆN TẠI LÀ 'trash'
-        currentFolder: 'trash' 
+        currentFolder: 'trash'
       }
     });
 
     await popover.present();
-    
+
     const { data } = await popover.onDidDismiss();
     if (data && data.folder) {
       this.handleMoveAction(data.folder);
@@ -199,42 +192,38 @@ export class TrashMailPage implements OnInit {
   }
 
   private handleMarkAction(action: string) {
-    // Trong thùng rác, hành động 'trash' được hiểu là Xóa vĩnh viễn.
-    if (action === 'readUnread') {
-      const hasUnread = this.mails.some(mail => this.selectedMails.has(mail.id) && !mail.isRead);
-      const targetIsRead = hasUnread ? true : false; 
-      
+    if (action === 'trash') {
+      // Gọi backend xóa vĩnh viễn
+      this.emailService.deleteEmailsPermanently(Array.from(this.selectedMails)).subscribe(() => {
+        this.mails = this.mails.filter(mail => !this.selectedMails.has(mail.id));
+        this.filteredMails = [...this.mails];
+        this.selectedMails.clear();
+        this.isEditMode = false;
+      });
+    } else if (action === 'flag') {
+      const hasUnflagged = this.mails.some(mail => this.selectedMails.has(mail.id) && !mail.isFlagged);
+      const targetIsFlagged = hasUnflagged ? true : false;
+
       this.mails.forEach(mail => {
         if (this.selectedMails.has(mail.id)) {
-          mail.isRead = targetIsRead; 
+          mail.isFlagged = targetIsFlagged;
         }
       });
-    } else if (action === 'trash') {
-       // Xóa vĩnh viễn khỏi danh sách
-       this.mails = this.mails.filter(mail => !this.selectedMails.has(mail.id));
-    } else if (action === 'flag') {
-        const hasUnflagged = this.mails.some(mail => this.selectedMails.has(mail.id) && !mail.isFlagged);
-        const targetIsFlagged = hasUnflagged ? true : false;
-        
-        this.mails.forEach(mail => {
-          if (this.selectedMails.has(mail.id)) {
-            mail.isFlagged = targetIsFlagged;
-          }
-        });
+
+      this.filteredMails = [...this.mails];
+      this.selectedMails.clear();
+      this.isEditMode = false;
     }
-    
-    this.filteredMails = [...this.mails]; 
-    this.selectedMails.clear();
-    this.isEditMode = false;
   }
 
   private handleMoveAction(folder: string) {
-    // Hành động Di chuyển trong thùng rác tương đương với Khôi phục (xóa khỏi danh sách hiện tại)
-    this.mails = this.mails.filter(mail => !this.selectedMails.has(mail.id));
-    
-    this.filteredMails = [...this.mails];
-    this.selectedMails.clear();
-    this.isEditMode = false;
+    // Trong Trash, Move = Restore về Inbox
+    this.emailService.restoreEmailsFromTrash(Array.from(this.selectedMails)).subscribe(() => {
+      this.mails = this.mails.filter(mail => !this.selectedMails.has(mail.id));
+      this.filteredMails = [...this.mails];
+      this.selectedMails.clear();
+      this.isEditMode = false;
+    });
   }
 
   composeMail() {

@@ -6,6 +6,18 @@ import { Router } from '@angular/router';
 import { ScheduleMailModalComponent } from './schedule-mail-modal.component';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { EmailService, MailDTO } from '../all-mail/email.service';
+
+// trong compose-mail.page.ts hoặc tạo file email-request.model.ts
+export interface SendEmailRequest {
+  senderId: string;
+  recipientsTo: string[];
+  recipientsCc: string[];
+  recipientsBcc: string[];
+  subject: string;
+  body: string;
+}
+
 
 @Component({
   selector: 'app-compose-mail',
@@ -27,7 +39,8 @@ export class ComposeMailPage implements OnInit {
     private router: Router,
     private actionSheetCtrl: ActionSheetController,
     private modalCtrl: ModalController,
-    private http: HttpClient
+    private http: HttpClient,
+    private emailService: EmailService
   ) { }
 
   ngOnInit() {
@@ -66,8 +79,28 @@ export class ComposeMailPage implements OnInit {
           text: 'Lưu nháp',
           role: 'default',
           cssClass: 'pill-button save-button',
-          handler: () => this.router.navigate(['/mailbox'])
+          handler: () => {
+            // chuẩn bị payload
+            const recipients = this.recipient.split(',').map(e => e.trim());
+            const payload: SendEmailRequest = {
+              senderId: this.senderEmail,
+              recipientsTo: recipients,
+              recipientsCc: [],
+              recipientsBcc: [],
+              subject: this.subject,
+              body: this.body
+            };
+
+            this.http.post('http://localhost:8080/emails/draft', payload)
+              .subscribe({
+                next: res => { console.log('Lưu nháp thành công', res); this.router.navigate(['/draft-mail']); },
+                error: err => console.error('Lưu nháp thất bại', err)
+              });
+
+
+          }
         },
+
         {
           text: 'Hủy',
           role: 'cancel',

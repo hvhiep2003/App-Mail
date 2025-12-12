@@ -15,11 +15,10 @@
 
 
     <div class="info">
-      <div class="sender">{{ email.sender }}</div>
+      <div class="sender">{{ getSenderEmail() }}</div>
       <div class="to">
-        {{ folder === 'inbox' ? 'Từ' : 'Đến' }}: <strong>{{ to }}</strong>
+        {{ folder === 'inbox' ? 'Từ' : 'Đến' }}: <strong>{{ recipientsDisplay || to }}</strong>
       </div>
-
     </div>
 
     <div class="date">{{ email.date | date:'dd/MM/yyyy' }}</div>

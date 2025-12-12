@@ -45,6 +45,9 @@ export class EmailDetailPage implements OnInit {
   to: string = '';
   isActionOpen = false;
   previousPage: string = '/all-mail';
+  senderDisplay: string = '';
+  recipientsDisplay: string = '';
+
 
   constructor(
     private router: Router,
@@ -54,13 +57,7 @@ export class EmailDetailPage implements OnInit {
   ) { }
 
   getSenderEmail() {
-    if (!this.email) return '';
-
-    if (typeof this.email.sender === 'string') {
-      return this.email.sender;
-    }
-
-    return this.email.sender.emailAddress;
+    return this.senderDisplay || (this.email ? (typeof this.email.sender === 'string' ? this.email.sender : this.email.sender?.emailAddress || this.email.sender?.username) : '');
   }
 
   ngOnInit() {
@@ -70,17 +67,28 @@ export class EmailDetailPage implements OnInit {
     this.previousPage = nav?.extras?.state?.['previousPage'] || '/all-mail';
 
     if (this.email) {
-      // Nếu có email từ state, kiểm tra trường 'recipientsTo' hoặc 'to'
-      const recipients = (this.email as any).recipientsTo || (this.email as any).to || '';
+      // --- chuẩn hóa sender hiển thị ---
+      this.senderDisplay = typeof this.email.sender === 'string'
+        ? this.email.sender
+        : (this.email.sender?.emailAddress || this.email.sender?.username || '');
 
-      // Nếu là mảng, join thành chuỗi
-      this.to = Array.isArray(recipients)
-        ? recipients.map((r: any) => r.emailAddress || r).join(', ')
+      // --- chuẩn hóa recipients (recipientsTo hoặc to) ---
+      const recipients = (this.email as any).recipientsTo ?? (this.email as any).to ?? '';
+      this.recipientsDisplay = Array.isArray(recipients)
+        ? recipients.map((r: any) => r.emailAddress ?? r).join(', ')
         : recipients;
 
+      // nếu backend không kèm date, dùng createdAt
+      if (!(this.email as any).date) {
+        (this.email as any).date = this.email.createdAt ? new Date(this.email.createdAt) : new Date();
+      }
+
+      // detect changes (nếu cần)
+      this.cdr.detectChanges();
       return;
     }
 
+    // nếu không có state thì lấy từ API bằng id
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
       this.router.navigate(['/all-mail']);
@@ -89,17 +97,19 @@ export class EmailDetailPage implements OnInit {
 
     this.emailService.getEmailById(id).subscribe({
       next: (mail: MailDTO) => {
-        // Chuẩn hóa email
-        this.email = {
-          ...mail,
-          date: new Date(mail.createdAt)
-        };
+        // chuẩn hóa email object
+        this.email = { ...mail };
 
-        // Xử lý 'to' tương tự
-        const recipients = mail.recipientsTo || (mail as any).to || '';
-        this.to = Array.isArray(recipients)
-          ? recipients.map(r => r.emailAddress || r).join(', ')
+        this.senderDisplay = typeof mail.sender === 'string'
+          ? mail.sender
+          : (mail.sender?.emailAddress || mail.sender?.username || '');
+
+        const recipients = mail.recipientsTo ?? (mail as any).to ?? '';
+        this.recipientsDisplay = Array.isArray(recipients)
+          ? recipients.map((r: any) => r.emailAddress ?? r).join(', ')
           : recipients;
+
+        (this.email as any).date = mail.createdAt ? new Date(mail.createdAt) : (mail.date ? new Date(mail.date) : new Date());
 
         this.cdr.detectChanges();
       },
@@ -108,6 +118,7 @@ export class EmailDetailPage implements OnInit {
       }
     });
   }
+
 
   get fromInitials(): string {
     if (!this.email) return '';

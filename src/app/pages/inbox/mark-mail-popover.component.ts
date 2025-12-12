@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core'; 
+import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, PopoverController } from '@ionic/angular';
 
@@ -41,12 +41,12 @@ import { IonicModule, PopoverController } from '@ionic/angular';
   imports: [IonicModule, CommonModule]
 })
 export class MarkMailPopoverComponent implements OnInit {
-  @Input() currentFolder: string = 'inbox'; 
-  
-  constructor(private popoverController: PopoverController) {}
-  
-  ngOnInit() {}
-  
+  @Input() currentFolder: string = 'inbox';
+
+  constructor(private popoverController: PopoverController) { }
+
+  ngOnInit() { }
+
   selectAction(action: string) {
     this.popoverController.dismiss({ action: action });
   }

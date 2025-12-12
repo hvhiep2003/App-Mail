@@ -250,6 +250,58 @@ export class InboxPage implements OnInit {
     }
   }
 
+
+
+  private handleMarkAction(action: string) {
+    // Logic Đánh dấu
+    if (action === 'readUnread') {
+      const hasUnread = this.mails.some(mail => this.selectedMails.has(mail.id) && !mail.isRead);
+      const targetIsRead = hasUnread ? true : false;
+
+      this.mails.forEach(mail => {
+        if (this.selectedMails.has(mail.id)) {
+          mail.isRead = targetIsRead;
+        }
+      });
+    } else if (action === 'trash') {
+      this.mails = this.mails.filter(mail => !this.selectedMails.has(mail.id));
+    } else if (action === 'flag') {
+
+      const emailIds = Array.from(this.selectedMails);
+
+      const hasUnflagged = this.mails.some(mail =>
+        this.selectedMails.has(mail.id) && !mail.isFlagged
+      );
+
+      // ⭐ 1. Cập nhật UI trước
+      this.mails.forEach(mail => {
+        if (this.selectedMails.has(mail.id)) {
+          mail.isFlagged = hasUnflagged ? true : false;
+        }
+      });
+
+      // ⭐ 2. Gửi API sau (không ảnh hưởng UI)
+      if (hasUnflagged) {
+        this.emailService.markEmailsStarred(emailIds).subscribe();
+      } else {
+        this.emailService.unmarkEmailsStarred(emailIds).subscribe();
+      }
+    }
+
+
+    this.filteredMails = [...this.mails];
+    this.selectedMails.clear();
+    this.isEditMode = false;
+  }
+
+  private updateStarUI(starred: boolean) {
+    this.mails.forEach(mail => {
+      if (this.selectedMails.has(mail.id)) {
+        mail.isFlagged = starred;
+      }
+    });
+  }
+
   async moveMails(event: Event) {
     if (this.selectedMails.size === 0) return;
 
@@ -272,47 +324,6 @@ export class InboxPage implements OnInit {
     if (data && data.folder) {
       this.handleMoveAction(data.folder);
     }
-  }
-
-  private handleMarkAction(action: string) {
-    // ... (giữ nguyên handleMarkAction)
-    console.log(`Đã chọn hành động Đánh dấu: ${action} cho ${this.selectedMails.size} thư.`);
-
-    if (action === 'readUnread') {
-      const hasUnread = this.mails.some(mail =>
-        this.selectedMails.has(mail.id) && !mail.isRead
-      );
-      const targetIsRead = hasUnread ? true : false;
-
-      this.mails.forEach(mail => {
-        if (this.selectedMails.has(mail.id)) {
-          mail.isRead = targetIsRead;
-        }
-      });
-      console.log(`Đánh dấu là ${targetIsRead ? 'Đã đọc' : 'Chưa đọc'} thành công.`);
-
-    } else if (action === 'trash') {
-      this.mails = this.mails.filter(mail => !this.selectedMails.has(mail.id));
-      console.log('Di chuyển vào thùng rác thành công.');
-
-    } else if (action === 'flag') {
-      const hasUnflagged = this.mails.some(mail =>
-        this.selectedMails.has(mail.id) && !mail.isFlagged
-      );
-
-      const targetIsFlagged = hasUnflagged ? true : false;
-
-      this.mails.forEach(mail => {
-        if (this.selectedMails.has(mail.id)) {
-          mail.isFlagged = targetIsFlagged;
-        }
-      });
-      console.log(`Đánh dấu thư (Gắn cờ) thành công: ${targetIsFlagged ? 'Đã gắn cờ' : 'Đã bỏ cờ'}.`);
-    }
-
-    this.filteredMails = [...this.mails];
-    this.selectedMails.clear();
-    this.isEditMode = false;
   }
 
   private handleMoveAction(folder: string) {

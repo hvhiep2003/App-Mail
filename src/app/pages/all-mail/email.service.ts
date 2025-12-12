@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 // email.service.ts
 export interface SenderDTO {
@@ -9,6 +10,17 @@ export interface SenderDTO {
     username: string;
     emailAddress: string;
 }
+
+export interface Mail {
+    id: string;
+    sender: string;
+    subject: string;
+    body: string;
+    date: Date;
+    isRead: boolean;
+    isFlagged: boolean;
+}
+
 
 export interface MailDTO {
     id: string;
@@ -62,6 +74,44 @@ export class EmailService {
     getDrafts(userEmail: string): Observable<MailDTO[]> {
         return this.http.get<MailDTO[]>(`${this.baseUrl}/draft?userEmail=${userEmail}`);
     }
+
+    markEmailsStarred(emailIds: string[]): Observable<any> {
+        return this.http.post(`${this.baseUrl}/mark-starred`, emailIds);
+    }
+
+    unmarkEmailsStarred(emailIds: string[]): Observable<any> {
+        return this.http.post(`${this.baseUrl}/unmark-starred`, emailIds);
+    }
+
+    getStarredEmails(userEmail: string): Observable<any[]> {
+        return this.http.get<any[]>(`${this.baseUrl}/starred?userEmail=${userEmail}`);
+    }
+
+    setStarStatus(emailId: string, starred: boolean) {
+        return this.http.put(`${this.baseUrl}/emails/${emailId}/star`, { starred });
+    }
+
+    // Lấy email trong thùng rác
+    getTrashEmails(userEmail: string): Observable<MailDTO[]> {
+        return this.http.get<MailDTO[]>(`${this.baseUrl}/trash/${userEmail}`);
+    }
+
+    // Xóa vĩnh viễn
+    deleteEmailsPermanently(emailIds: string[]): Observable<any> {
+        return this.http.delete(`${this.baseUrl}/trash`, { body: emailIds });
+    }
+
+    // Khôi phục
+    restoreEmailsFromTrash(emailIds: string[]): Observable<any> {
+        return this.http.put(`${this.baseUrl}/restore`, emailIds);
+    }
+
+    // Di chuyển mail vào thùng rác
+    moveEmailsToTrash(emailIds: string[]): Observable<any> {
+        return this.http.put(`${this.baseUrl}/trash`, emailIds);
+    }
+
+
 
 
 }
